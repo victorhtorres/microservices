@@ -40,3 +40,5 @@ out/
 target/
 
 .DS_Store
+
+.mvn/
