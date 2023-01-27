@@ -7,7 +7,10 @@ import org.springframework.web.reactive.function.client.WebClient;
 import com.infybuzz.entity.Student;
 import com.infybuzz.repository.StudentRepository;
 import com.infybuzz.request.CreateStudentRequest;
+import com.infybuzz.response.AddressResponse;
 import com.infybuzz.response.StudentResponse;
+
+import reactor.core.publisher.Mono;
 
 @Service
 public class StudentService {
@@ -27,11 +30,28 @@ public class StudentService {
 		
 		student.setAddressId(createStudentRequest.getAddressId());
 		student = studentRepository.save(student);
+		
+		StudentResponse studentResponse = new StudentResponse(student);
+		
+		studentResponse.setAddressResponse(getAddressById(student.getAddressId()));
 
-		return new StudentResponse(student);
+		return studentResponse;
 	}
 	
 	public StudentResponse getById (long id) {
-		return new StudentResponse(studentRepository.findById(id).get());
+		Student student = studentRepository.findById(id).get();
+		StudentResponse studentResponse = new StudentResponse(student);
+		
+		studentResponse.setAddressResponse(getAddressById(student.getAddressId()));
+		
+		return studentResponse;
+	}
+	
+	public AddressResponse getAddressById (long addressId) {
+		Mono<AddressResponse> addressResponse = 
+				webClient.get().uri("/getById/" + addressId)
+		.retrieve().bodyToMono(AddressResponse.class);
+		
+		return addressResponse.block();
 	}
 }
