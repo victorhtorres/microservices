@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.infybuzz.entity.Student;
+import com.infybuzz.feignclients.AddressFeignClient;
 import com.infybuzz.repository.StudentRepository;
 import com.infybuzz.request.CreateStudentRequest;
 import com.infybuzz.response.AddressResponse;
@@ -20,6 +21,9 @@ public class StudentService {
 	
 	@Autowired
 	WebClient webClient;
+	
+	@Autowired
+	AddressFeignClient addressFeignClient;
 
 	public StudentResponse createStudent(CreateStudentRequest createStudentRequest) {
 
@@ -33,7 +37,9 @@ public class StudentService {
 		
 		StudentResponse studentResponse = new StudentResponse(student);
 		
-		studentResponse.setAddressResponse(getAddressById(student.getAddressId()));
+		//studentResponse.setAddressResponse(getAddressById(student.getAddressId()));
+		
+		studentResponse.setAddressResponse(addressFeignClient.getById(student.getAddressId()));
 
 		return studentResponse;
 	}
@@ -42,7 +48,9 @@ public class StudentService {
 		Student student = studentRepository.findById(id).get();
 		StudentResponse studentResponse = new StudentResponse(student);
 		
-		studentResponse.setAddressResponse(getAddressById(student.getAddressId()));
+		//studentResponse.setAddressResponse(getAddressById(student.getAddressId()));
+		
+		studentResponse.setAddressResponse(addressFeignClient.getById(student.getAddressId()));
 		
 		return studentResponse;
 	}
