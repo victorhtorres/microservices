@@ -11,7 +11,7 @@ import com.infybuzz.request.CreateStudentRequest;
 import com.infybuzz.response.AddressResponse;
 import com.infybuzz.response.StudentResponse;
 
-import reactor.core.publisher.Mono;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 
 @Service
 public class StudentService {
@@ -55,6 +55,7 @@ public class StudentService {
 		return studentResponse;
 	}
 	
+	@CircuitBreaker(name = "addressService")
 	public AddressResponse getAddressById (long addressId) {
 		AddressResponse addressResponse = 
 				addressFeignClient.getById(addressId);
