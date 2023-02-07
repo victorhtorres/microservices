@@ -6,11 +6,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.infybuzz.response.AddressResponse;
 
-@FeignClient(value = "address-service",
-		path = "/api/address")
+@FeignClient(value = "api-gateway")
 public interface AddressFeignClient {
 
-	@GetMapping("/getById/{id}")
+	@GetMapping("/address-service/api/address/getById/{id}")
 	public AddressResponse getById(@PathVariable long id);
 	
 }
