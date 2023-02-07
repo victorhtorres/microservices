@@ -55,11 +55,16 @@ public class StudentService {
 		return studentResponse;
 	}
 	
-	@CircuitBreaker(name = "addressService")
+	@CircuitBreaker(name = "addressService",
+			fallbackMethod = "fallbackGetAddressById")
 	public AddressResponse getAddressById (long addressId) {
 		AddressResponse addressResponse = 
 				addressFeignClient.getById(addressId);
 		
 		return addressResponse;
+	}
+	
+	public AddressResponse fallbackGetAddressById (long addressId, Throwable th) {
+		return new AddressResponse();
 	}
 }
