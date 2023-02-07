@@ -39,7 +39,7 @@ public class StudentService {
 		
 		//studentResponse.setAddressResponse(getAddressById(student.getAddressId()));
 		
-		studentResponse.setAddressResponse(addressFeignClient.getById(student.getAddressId()));
+		studentResponse.setAddressResponse(getAddressById(student.getAddressId()));
 
 		return studentResponse;
 	}
@@ -50,16 +50,15 @@ public class StudentService {
 		
 		//studentResponse.setAddressResponse(getAddressById(student.getAddressId()));
 		
-		studentResponse.setAddressResponse(addressFeignClient.getById(student.getAddressId()));
+		studentResponse.setAddressResponse(getAddressById(student.getAddressId()));
 		
 		return studentResponse;
 	}
 	
 	public AddressResponse getAddressById (long addressId) {
-		Mono<AddressResponse> addressResponse = 
-				webClient.get().uri("/getById/" + addressId)
-		.retrieve().bodyToMono(AddressResponse.class);
+		AddressResponse addressResponse = 
+				addressFeignClient.getById(addressId);
 		
-		return addressResponse.block();
+		return addressResponse;
 	}
 }
