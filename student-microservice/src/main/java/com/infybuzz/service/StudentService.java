@@ -24,6 +24,9 @@ public class StudentService {
 	
 	@Autowired
 	AddressFeignClient addressFeignClient;
+	
+	@Autowired
+	CommonService commonService;
 
 	public StudentResponse createStudent(CreateStudentRequest createStudentRequest) {
 
@@ -39,7 +42,7 @@ public class StudentService {
 		
 		//studentResponse.setAddressResponse(getAddressById(student.getAddressId()));
 		
-		studentResponse.setAddressResponse(getAddressById(student.getAddressId()));
+		studentResponse.setAddressResponse(commonService.getAddressById(student.getAddressId()));
 
 		return studentResponse;
 	}
@@ -50,21 +53,20 @@ public class StudentService {
 		
 		//studentResponse.setAddressResponse(getAddressById(student.getAddressId()));
 		
-		studentResponse.setAddressResponse(getAddressById(student.getAddressId()));
+		studentResponse.setAddressResponse(commonService.getAddressById(student.getAddressId()));
 		
 		return studentResponse;
 	}
 	
-	@CircuitBreaker(name = "addressService",
-			fallbackMethod = "fallbackGetAddressById")
-	public AddressResponse getAddressById (long addressId) {
-		AddressResponse addressResponse = 
-				addressFeignClient.getById(addressId);
-		
-		return addressResponse;
-	}
-	
-	public AddressResponse fallbackGetAddressById (long addressId, Throwable th) {
-		return new AddressResponse();
-	}
+	/*
+	 * @CircuitBreaker(name = "addressService", fallbackMethod =
+	 * "fallbackGetAddressById") public AddressResponse getAddressById (long
+	 * addressId) { AddressResponse addressResponse =
+	 * addressFeignClient.getById(addressId);
+	 * 
+	 * return addressResponse; }
+	 * 
+	 * public AddressResponse fallbackGetAddressById (long addressId, Throwable th)
+	 * { return new AddressResponse(); }
+	 */
 }
